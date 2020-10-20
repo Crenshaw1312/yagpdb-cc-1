@@ -209,7 +209,13 @@
 		{{ $data := sdict "Name" $tagName }}
 		{{ template "getTag" $data }}
 		{{ with $data.Tag }}
-			{{ sendMessage nil .Value }}
+			{{ $aliases := split (slice .Key 4 (sub (len .Key) 1)) "|" }}
+			{{ sendMessage nil (cembed
+				"title" (print "**" (joinStr "/" $aliases) "**")
+				"description" .Value
+				"footer" (sdict "text" (print "Requested by " $.User.Username) "icon_url" ($.User.AvatarURL "256"))
+				"color" 14232643
+			) }}
 		{{ end }}
 	{{ end }}
 {{ end }}
